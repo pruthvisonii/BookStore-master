@@ -14,7 +14,6 @@ using BookStore.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using BookStore.Services;
 
 namespace BookStore
 {
@@ -33,14 +32,11 @@ namespace BookStore
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddAuthentication().AddGoogle(options =>
-            {
-                IConfigurationSection googleAuthNSection =
-                    Configuration.GetSection("Authentication:Google");
-
-                options.ClientId = googleAuthNSection["ClientId"];
-                options.ClientSecret = googleAuthNSection["ClientSecret"];
-            });
+           services.AddAuthentication().AddGoogle(options =>
+        {
+            options.ClientId = "your-client-id";
+            options.ClientSecret = "your-client-secret";
+        });
 
             services.AddDbContext<BookStoreContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("BookStoreContext")));
@@ -49,7 +45,6 @@ namespace BookStore
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<BookStoreContext>();
 
-            services.AddTransient<IEmailSender, EmailSender>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<Cart>(sp => Cart.GetCart(sp));
 
